@@ -1,0 +1,9 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    { "name": "QA - versão correta", "type": "debugpy", "request": "launch", "program": "${workspaceFolder}/main.py", "console": "integratedTerminal" },
+    { "name": "QA - bug crítico", "type": "debugpy", "request": "launch", "program": "${workspaceFolder}/main.py", "args": ["--bug", "critico"], "console": "integratedTerminal" },
+    { "name": "QA - bug leve", "type": "debugpy", "request": "launch", "program": "${workspaceFolder}/main.py", "args": ["--bug", "leve"], "console": "integratedTerminal" },
+    { "name": "QA - comparar antes e depois", "type": "debugpy", "request": "launch", "program": "${workspaceFolder}/main.py", "args": ["--comparar"], "console": "integratedTerminal" }
+  ]
+}

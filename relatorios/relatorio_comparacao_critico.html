@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Relatório de QA - Estacionamento</title>
+<style>
+  body { font-family: system-ui, "Segoe UI", Arial, sans-serif; font-size: 15px; line-height: 1.4;
+         color: #1a1a1a; background: #fff; margin: 0 auto; max-width: 1100px; padding: 24px 16px; }
+  h1 { font-size: 26px; font-weight: 700; margin: 0 0 4px; }
+  h2 { font-size: 19px; font-weight: 700; margin: 28px 0 10px; border-bottom: 2px solid #1a1a1a; padding-bottom: 4px; }
+  .meta { color: #444; margin: 0 0 16px; }
+  .decisao { border: 2px solid #b3261e; color: #b3261e; font-size: 22px; font-weight: 700; padding: 12px 16px; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; margin-top: 14px; }
+  .card { border: 1px solid #bbb; padding: 10px 12px; }
+  .card span { display: block; color: #444; font-size: 13px; font-weight: 600; }
+  .card b { font-size: 24px; }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; }
+  th, td { border: 1px solid #bbb; padding: 6px 8px; text-align: left; vertical-align: top; }
+  th { background: #eee; font-weight: 700; }
+  tr.fail td { background: #fdecea; }
+  tr.pass .sit { color: #1b7a3a; font-weight: 700; }
+  tr.fail .sit { color: #b3261e; font-weight: 700; }
+  code { font-size: 13px; }
+  .comp { max-width: 640px; }
+  .tabela { overflow-x: auto; }
+</style></head><body>
+<h1>Relatório de QA — Sistema de Estacionamento</h1>
+<p class="meta">Versão testada: <strong>versão com bug proposital crítico (comparada com a correta)</strong> · Executado em 29/09/2026 23:28:48</p>
+<div class="decisao">Decisão de QA: NÃO LIBERAR</div>
+<div class="cards"><div class='card'><span>Testes executados</span><b>12</b></div><div class='card'><span>Aprovados (PASS)</span><b>10</b></div><div class='card'><span>Reprovados (FAIL)</span><b>2</b></div><div class='card'><span>Taxa de aprovação</span><b>83.3%</b></div><div class='card'><span>Falhas críticas</span><b>2</b></div></div>
+<h2>Funcionalidades e regras testadas</h2><ul><li>RN01 - Entrada: só entra veículo com placa válida (padrão antigo ABC-1234 ou Mercosul ABC1D23) que ainda não esteja dentro.</li><li>RN02 - Lotação: com todas as vagas ocupadas, nenhum veículo entra.</li><li>RN03 - Cobrança: até 15 min é grátis; a 1ª hora custa R$ 8,00; cada hora adicional (ou fração) custa R$ 4,00; teto da diária R$ 40,00.</li><li>RN04 - Saída: só sai veículo que está dentro, e a vaga fica livre de novo.</li><li>RN05 - Mensalista: placa cadastrada como mensalista não paga.</li></ul>
+<h2>Casos de teste</h2><div class="tabela"><table><thead><tr><th>ID</th><th>Requisito</th><th>Descrição</th><th>Esperado</th><th>Obtido</th><th>Situação</th><th>Severidade</th></tr></thead><tbody><tr class='pass'><td>CT01</td><td>RN01 - Entrada</td><td>Entrada de carro com placa no padrão antigo (ABC-1234)</td><td><code>entrou, vagas livres: 4</code></td><td><code>entrou, vagas livres: 4</code></td><td class='sit'>PASS</td><td>-</td></tr><tr class='pass'><td>CT02</td><td>RN01 - Entrada</td><td>Entrada de carro com placa Mercosul (BRA2E19)</td><td><code>entrou, vagas livres: 4</code></td><td><code>entrou, vagas livres: 4</code></td><td class='sit'>PASS</td><td>-</td></tr><tr class='pass'><td>CT03</td><td>RN01 - Entrada</td><td>Placa fora de qualquer padrão é recusada e o motivo aparece</td><td><code>ERRO: Placa inválida: 12-ABCD</code></td><td><code>ERRO: Placa inválida: 12-ABCD</code></td><td class='sit'>PASS</td><td>-</td></tr><tr class='pass'><td>CT04</td><td>RN01 - Entrada</td><td>Mesma placa não pode entrar duas vezes</td><td><code>ERRO: Veículo ABC-1234 já está no estacionamento</code></td><td><code>ERRO: Veículo ABC-1234 já está no estacionamento</code></td><td class='sit'>PASS</td><td>-</td></tr><tr class='pass'><td>CT05</td><td>RN02 - Lotação</td><td>Com as 2 vagas ocupadas, o 3º carro é recusado</td><td><code>ERRO: Estacionamento lotado</code></td><td><code>ERRO: Estacionamento lotado</code></td><td class='sit'>PASS</td><td>-</td></tr><tr class='pass'><td>CT06</td><td>RN03 - Cobrança</td><td>15 minutos (limite da tolerância) não paga</td><td><code>R$ 0.00</code></td><td><code>R$ 0.00</code></td><td class='sit'>PASS</td><td>-</td></tr><tr class='pass'><td>CT07</td><td>RN03 - Cobrança</td><td>Exatamente 1 hora paga só a primeira hora</td><td><code>R$ 8.00</code></td><td><code>R$ 8.00</code></td><td class='sit'>PASS</td><td>-</td></tr><tr class='fail'><td>CT08</td><td>RN03 - Cobrança</td><td>1h30 cobra a fração como hora cheia (8 + 4)</td><td><code>R$ 12.00</code></td><td><code>R$ 8.00</code></td><td class='sit'>FAIL</td><td>CRÍTICA</td></tr><tr class='pass'><td>CT09</td><td>RN03 - Cobrança</td><td>12 horas para no teto da diária</td><td><code>R$ 40.00</code></td><td><code>R$ 40.00</code></td><td class='sit'>PASS</td><td>-</td></tr><tr class='fail'><td>CT10</td><td>RN04 - Saída</td><td>Saída após 2h10 cobra 3 horas e libera a vaga</td><td><code>pagou R$ 16.00, vagas livres: 1</code></td><td><code>pagou R$ 12.00, vagas livres: 1</code></td><td class='sit'>FAIL</td><td>CRÍTICA</td></tr><tr class='pass'><td>CT11</td><td>RN04 - Saída</td><td>Saída de placa que não entrou é recusada</td><td><code>ERRO: Veículo XYZ-9999 não está no estacionamento</code></td><td><code>ERRO: Veículo XYZ-9999 não está no estacionamento</code></td><td class='sit'>PASS</td><td>-</td></tr><tr class='pass'><td>CT12</td><td>RN05 - Mensalista</td><td>Mensalista fica 5 horas e não paga</td><td><code>R$ 0.00</code></td><td><code>R$ 0.00</code></td><td class='sit'>PASS</td><td>-</td></tr></tbody></table></div>
+<h2>Defeitos encontrados</h2><ul><li><strong>CT08 (CRÍTICA)</strong> — 1h30 cobra a fração como hora cheia (8 + 4). Esperado <code>R$ 12.00</code>, o sistema devolveu <code>R$ 8.00</code>.</li><li><strong>CT10 (CRÍTICA)</strong> — Saída após 2h10 cobra 3 horas e libera a vaga. Esperado <code>pagou R$ 16.00, vagas livres: 1</code>, o sistema devolveu <code>pagou R$ 12.00, vagas livres: 1</code>.</li></ul>
+<h2>Antes e depois do bug proposital (critico)</h2><table class='comp'><thead><tr><th>Métrica</th><th>Versão correta</th><th>Versão com bug</th></tr></thead><tbody><tr><td>Testes aprovados</td><td>12</td><td>10</td></tr><tr><td>Testes reprovados</td><td>0</td><td>2</td></tr><tr><td>Taxa de aprovação</td><td>100.0%</td><td>83.3%</td></tr><tr><td>Falhas críticas</td><td>0</td><td>2</td></tr><tr><td>Decisão de QA</td><td>LIBERADO</td><td>NÃO LIBERAR</td></tr></tbody></table><p>Testes que mudaram de resultado: <strong>CT08, CT10</strong>.</p>
+<h2>Critério da decisão</h2>
+<ul><li>Nenhuma falha: <strong>LIBERADO</strong>.</li>
+<li>Falhas, mas nenhuma crítica: <strong>LIBERADO COM RESSALVAS</strong>.</li>
+<li>Qualquer falha crítica: <strong>NÃO LIBERAR</strong>.</li></ul>
+</body></html>
